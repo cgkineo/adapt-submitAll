@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-03/schema",
+  "id": "http://jsonschema.net",
+  "required": false,
+  "properties":{
+    "pluginLocations": {
+      "type": "object",
+      "required": true,
+      "properties":{
+        "config": {
+          "type":"object"
+        },
+        "course": {
+          "type":"object"
+        },
+        "contentobject": {
+          "type":"object"
+        },
+        "article": {
+          "type":"object",
+          "properties":{
+            "_singleSubmit": {
+              "type":"object",
+              "required": false,
+              "legend": "Single Submit",
+              "properties":{
+                "_isEnabled": {
+                  "type": "boolean",
+                  "required":true,
+                  "title": "Enabled",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": [],
+                  "help": "Turns the Single Submit extension on and off."
+                },
+                "_insertAfterBlock": {
+                  "type": "string",
+                  "required": false,
+                  "title": "Insert Submit after block",
+                  "inputType": "Text",
+                  "validators": [],
+                  "help": "If you want the submit button to be appended to a specific block, insert its ID here. Leave blank for it to default to the last block in the article."
+                }
+              }
+            }
+          }
+        },
+        "block": {
+          "type": "object"
+        },
+        "component": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}
