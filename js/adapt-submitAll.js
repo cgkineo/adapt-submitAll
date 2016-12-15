@@ -2,7 +2,7 @@ define([
 	'core/js/adapt'
 ], function(Adapt) {
 
-	var SingleSubmit = Backbone.View.extend({
+	var SubmitAll = Backbone.View.extend({
 
 		initialize: function() {
 			this.model.get("_articleView").$el.addClass("noSubmitButtons");
@@ -17,11 +17,11 @@ define([
 
 		render: function() {
 			var buttonLabel = Adapt.course.get("_buttons")._submit.buttonText;
-			var template = Handlebars.templates.singleSubmit;
+			var template = Handlebars.templates.submitAll;
 
 			this.$el.html(template({ submit: (buttonLabel) ? buttonLabel : "unset_submit_button" }));
 			
-			this.$el.addClass("singleSubmit");
+			this.$el.addClass("submitAll");
 
 			var $containerDiv = this.getContainerDiv(this.model.get("_articleView").$el, this.model.get("_insertAfterBlock"));
 			$containerDiv.after(this.$el);
@@ -50,10 +50,10 @@ define([
 			var buttons = this.model.get("_articleView").$el.find(".buttons-action");
 			if(enable) {
 				buttons.removeClass("disabled");
-				$(".buttons-action", this.$el).on("click.singleSubmit", this.onSubmitClicked);
+				$(".buttons-action", this.$el).on("click.submitAll", this.onSubmitClicked);
 			} else {
 				buttons.addClass("disabled");
-				this.$el.find(".buttons-action").off("click.singleSubmit", this.onSubmitClicked);
+				this.$el.find(".buttons-action").off("click.submitAll", this.onSubmitClicked);
 			}
 		},
 
@@ -106,19 +106,19 @@ define([
 
 			this.model.set("_isSubmitted", true);
 
-			Adapt.trigger("singleSubmit:submitted", this.model.get("_componentViews"));
+			Adapt.trigger("submitAll:submitted", this.model.get("_componentViews"));
 		}
 	});
 
 	Adapt.on("articleView:postRender", function(view) {
-		var ssData = view.model.get("_singleSubmit");
-		if(ssData && ssData._isEnabled === true) {
-			var model = new Backbone.Model(ssData);
+		var saData = view.model.get("_submitAll");
+		if(saData && saData._isEnabled === true) {
+			var model = new Backbone.Model(saData);
 			model.set({
 				"_articleView": view,
 				"_componentViews": []
 			});
-			new SingleSubmit({ model: model });
+			new SubmitAll({ model: model });
 		}
 	});
 });

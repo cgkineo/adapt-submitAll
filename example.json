@@ -1,6 +1,6 @@
 // To go in articles.json
 {
-    "_singleSubmit": {
+    "_submitAll": {
         "_isEnabled": true,
         "_insertAfterBlock": ""
     }

@@ -1,9 +1,9 @@
-adapt-singleSubmit
+adapt-submitAll
 ================
 
 An Adapt extension that allows all the questions in an article to be submitted in one go via a single submit button.
 
-<img src="demo.gif" alt="Single Submit in action"/>
+<img src="demo.gif" alt="Submit All in action"/>
 
 The extension will hide the 'buttons' `<div>` for all the questions within the article and append its own submit button after either the last block in the article or the one specified in `_insertAfterBlock`
 

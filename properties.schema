@@ -20,10 +20,10 @@
         "article": {
           "type":"object",
           "properties":{
-            "_singleSubmit": {
+            "_submitAll": {
               "type":"object",
               "required": false,
-              "legend": "Single Submit",
+              "legend": "Submit All",
               "properties":{
                 "_isEnabled": {
                   "type": "boolean",
@@ -31,7 +31,7 @@
                   "title": "Enabled",
                   "inputType": { "type": "Boolean", "options": [false, true]},
                   "validators": [],
-                  "help": "Turns the Single Submit extension on and off."
+                  "help": "Turns the Submit All extension on and off."
                 },
                 "_insertAfterBlock": {
                   "type": "string",
