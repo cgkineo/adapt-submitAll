@@ -3,35 +3,34 @@
   "$schema": "http://json-schema.org/draft-03/schema",
   "id": "http://jsonschema.net",
   "required": false,
-  "properties":{
+  "properties": {
     "pluginLocations": {
       "type": "object",
       "required": true,
-      "properties":{
+      "properties": {
         "config": {
-          "type":"object"
+          "type": "object"
         },
         "course": {
-          "type":"object"
+          "type": "object"
         },
         "contentobject": {
-          "type":"object"
+          "type": "object"
         },
         "article": {
-          "type":"object",
-          "properties":{
+          "type": "object",
+          "properties": {
             "_submitAll": {
-              "type":"object",
+              "type": "object",
               "required": false,
               "legend": "Submit All",
-              "properties":{
+              "properties": {
                 "_isEnabled": {
                   "type": "boolean",
-                  "required":true,
-                  "title": "Enabled",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
-                  "validators": [],
-                  "help": "Turns the Submit All extension on and off."
+                  "required": true,
+                  "title": "Enabled?",
+                  "inputType": "Checkbox",
+                  "validators": []
                 },
                 "_insertAfterBlock": {
                   "type": "string",
