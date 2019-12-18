@@ -1,7 +1,5 @@
 // To go in articles.json
-{
-    "_submitAll": {
+"_submitAll": {
         "_isEnabled": true,
         "_insertAfterBlock": ""
-    }
 }
