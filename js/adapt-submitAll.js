@@ -81,6 +81,10 @@ define([
 
 		removeEventListeners: function() {
 			this.model.get('_componentViews').forEach(function(view) {
+				if (view.model.get('_component') === 'textinput') {
+					view.$el.find('input').off('change.submitAll');
+					return;
+				}
 				view.$el.off('click.submitAll');
 			});
 		},
@@ -99,8 +103,11 @@ define([
 
 			if (isQuestion && isChild) {
 				this.model.get('_componentViews').push(view);
+				if (view.model.get('_component') === 'textinput') {
+					view.$el.find('input').on('change.submitAll', this.onInteraction);
+					return;
+				}
 				view.$el.on('click.submitAll', this.onInteraction);
-				//TODO add support for textInput (see #4)
 			}
 		},
 
