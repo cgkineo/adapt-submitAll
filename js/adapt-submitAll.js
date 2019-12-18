@@ -72,14 +72,11 @@ define([
 		 * @return {boolean}
 		 */
 		canSubmit: function() {
-			var views = this.model.get('_componentViews');
-			for (var i = 0, count = views.length; i < count; i++) {
-				var component = views[i];
-				if (!component.model.get('_isEnabled') || !component.canSubmit()) {
-					return false;
+			return this.model.get('_componentViews').every(function(component) {
+				if (component.model.get('_isEnabled') && component.canSubmit()) {
+					return true;
 				}
-				}
-			return true;
+			});
 		},
 
 		removeEventListeners: function() {
