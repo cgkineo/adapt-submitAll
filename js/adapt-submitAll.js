@@ -97,11 +97,11 @@ define([
 		 * @param {Backbone.View} view
 		*/
 		onComponentViewRendered: function(view) {
-			var isQuestion = view.$el.hasClass('question-component');
-			var parentArticleModel = view.model.findAncestor('articles');
-			var isChild = (parentArticleModel === this.model.get('_articleView').model);
+			if (!view.$el.hasClass('question-component')) return;
 
-			if (isQuestion && isChild) {
+			var parentArticleId = view.model.findAncestor('articles').get('_id');
+			var submitAllArticleId = this.model.get('_articleView').model.get('_id');
+			if (parentArticleId === submitAllArticleId) {
 				this.model.get('_componentViews').push(view);
 				if (view.model.get('_component') === 'textinput') {
 					view.$el.find('input').on('change.submitAll', this.onInteraction);
@@ -111,13 +111,14 @@ define([
 			}
 		},
 
-		onInteraction: function(event) {
+		onInteraction: function() {
 			// need to wait until current call stack's done in FF
 			_.defer(this._onInteractionDelegate);
 		},
 
 		_onInteractionDelegate: function() {
 			if (!!this.model.get('_isSubmitted')) return;
+
 			this.enableSubmitAllButton(this.canSubmit());
 		},
 
