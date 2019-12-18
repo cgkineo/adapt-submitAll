@@ -49,10 +49,10 @@ define([
 		enableButtons: function(enable) {
 			var buttons = this.model.get("_articleView").$el.find(".buttons-action");
 			if(enable) {
-				buttons.removeClass("disabled");
+				buttons.removeClass("disabled").attr('disabled', false).attr('aria-label', Adapt.course.get('_buttons')._submit.ariaLabel);
 				$(".buttons-action", this.$el).on("click.submitAll", this.onSubmitClicked);
 			} else {
-				buttons.addClass("disabled");
+				buttons.addClass("disabled").attr('disabled', true);
 				this.$el.find(".buttons-action").off("click.submitAll", this.onSubmitClicked);
 			}
 		},
