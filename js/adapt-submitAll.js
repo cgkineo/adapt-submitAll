@@ -41,20 +41,18 @@ define([
 		},
 
 		/**
-		 * if _insertAfterBlock is set, looks for and returns that block within the article. If it's not (or wasn't found) returns the last block in the article
+		 * Returns a reference to the `<div>` we're going to append our view to.
+		 * @param {jQuery} $article JQuery reference to the article we're attached to
+		 * @param {string} [blockId] The id of the block to append our view to. Must be in the article we're attached to...
+		 * @return {jQuery}
 		 */
-		getContainerDiv: function($articleEl, blockId) {
-			var $div;
-
+		getContainerDiv: function($article, blockId) {
 			if (blockId) {
-				$div = $articleEl.find('.' + blockId);
+				var $div = $article.find('.' + blockId);
+				if ($div.length > 0) return $div;
 			}
 
-			if (!blockId || $div.length === 0) {
-				$div = $articleEl.find('.block').last();
-			}
-
-			return $div;
+			return $article.find('.block').last();
 		},
 
 		enableSubmitAllButton: function(enable) {
