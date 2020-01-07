@@ -56,13 +56,13 @@ define([
 		},
 
 		enableSubmitAllButton: function(enable) {
-			var submitAllButton = this.$el.find('.buttons-action');
+			var $submitAllButton = this.$el.find('.buttons-action');
 			if (enable) {
-				submitAllButton.removeClass('disabled').attr('disabled', false);
+				$submitAllButton.removeClass('disabled').attr('disabled', false);
 				return;
 			}
 
-			submitAllButton.addClass('disabled').attr('disabled', true);
+			$submitAllButton.addClass('disabled').attr('disabled', true);
 		},
 
 		/**
