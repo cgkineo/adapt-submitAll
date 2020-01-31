@@ -4,119 +4,142 @@ define([
 
 	var SubmitAll = Backbone.View.extend({
 
+		events: {
+			'click .buttons-action': 'onSubmitAllButtonClicked'
+		},
+
 		initialize: function() {
-			this.model.get("_articleView").$el.addClass("noSubmitButtons");
+			this.model.get('_articleView').$el.addClass('noSubmitButtons');
 
-			this.listenTo(Adapt, 'remove', this.remove);
-			this.listenTo(Adapt,'componentView:postRender', this.onComponentViewRendered);
+			this.listenTo(Adapt, {
+				'componentView:postRender': this.onComponentViewRendered,
+				remove: function() {
+					this.removeEventListeners();
+					this.remove();
+				}
+			});
 
-			_.bindAll(this, "onInteraction", "_onInteractionDelegate", "onSubmitClicked");
+			_.bindAll(this, 'onInteraction', '_onInteractionDelegate');
 
 			this.render();
 		},
 
 		render: function() {
-			var buttonLabel = Adapt.course.get("_buttons")._submit.buttonText;
-			var template = Handlebars.templates.submitAll;
+			var submitButtonLabels = Adapt.course.get('_buttons')._submit;
 
-			this.$el.html(template({ submit: (buttonLabel) ? buttonLabel : "unset_submit_button" }));
-			
-			this.$el.addClass("submitAll");
+			this.$el.html(Handlebars.templates.submitAll({
+				buttonText: submitButtonLabels.buttonText,
+				ariaLabel: submitButtonLabels.ariaLabel
+			}));
 
-			var $containerDiv = this.getContainerDiv(this.model.get("_articleView").$el, this.model.get("_insertAfterBlock"));
+			this.$el.addClass('submitAll');
+
+			var $containerDiv = this.getContainerDiv(this.model.get('_articleView').$el, this.model.get('_insertAfterBlock'));
 			$containerDiv.after(this.$el);
 
 			return this;
 		},
 
 		/**
-		 * if _insertAfterBlock is set, looks for and returns that block within the article. If it's not (or wasn't found) returns the last block in the article
+		 * Returns a reference to the `<div>` we're going to append our view to.
+		 * @param {jQuery} $article JQuery reference to the article we're attached to
+		 * @param {string} [blockId] The id of the block to append our view to. Must be in the article we're attached to...
+		 * @return {jQuery}
 		 */
-		getContainerDiv: function($articleEl, blockId) {
-			var $div;
-
-			if(blockId) {
-				$div = $articleEl.find("." + blockId);
+		getContainerDiv: function($article, blockId) {
+			if (blockId) {
+				var $div = $article.find('.' + blockId);
+				if ($div.length > 0) return $div;
 			}
 
-			if(!blockId || $div.length === 0) {
-				$div = $articleEl.find(".block").last();
-			}
-
-			return $div;
+			return $article.find('.block').last();
 		},
 
-		enableButtons: function(enable) {
-			var buttons = this.model.get("_articleView").$el.find(".buttons-action");
-			if(enable) {
-				buttons.removeClass("disabled");
-				$(".buttons-action", this.$el).on("click.submitAll", this.onSubmitClicked);
-			} else {
-				buttons.addClass("disabled");
-				this.$el.find(".buttons-action").off("click.submitAll", this.onSubmitClicked);
+		enableSubmitAllButton: function(enable) {
+			var $submitAllButton = this.$el.find('.buttons-action');
+			if (enable) {
+				$submitAllButton.removeClass('disabled').attr('disabled', false);
+				return;
 			}
-		},
 
-		canSubmit: function() {
-			var isSubmittable = true;
-			_.each(this.model.get("_componentViews"), function(component) {
-				if(!component.model.get("_isEnabled") || component.canSubmit() === false) {
-					isSubmittable = false;
-				}
-			});
-			return isSubmittable;
+			$submitAllButton.addClass('disabled').attr('disabled', true);
 		},
 
 		/**
-		* Event handling
+		 * Checks all the questions in the article to see if they're all ready to be submitted or not
+		 * @return {boolean}
+		 */
+		canSubmit: function() {
+			return this.model.get('_componentViews').every(function(component) {
+				if (component.model.get('_isEnabled') && component.canSubmit()) {
+					return true;
+				}
+			});
+		},
+
+		removeEventListeners: function() {
+			this.model.get('_componentViews').forEach(function(view) {
+				if (view.model.get('_component') === 'textinput') {
+					view.$el.find('input').off('change.submitAll');
+					return;
+				}
+				view.$el.off('click.submitAll');
+			});
+		},
+
+		/**
+		 * Checks the view to see if it is:
+		 * a) a question component
+		 * b) a child of the article we're attached to
+		 * And, if it is, add it to the list and listen out for the learner interacting with it
+		 * @param {Backbone.View} view
 		*/
 		onComponentViewRendered: function(view) {
-			var isQuestion = view.canSubmit; // ASSUMPTION
-			var parentArticleModel = view.model.findAncestor("articles");
-			var isChild = parentArticleModel === this.model.get("_articleView").model;
+			if (!view.$el.hasClass('question-component')) return;
 
-			if(isQuestion && isChild) {
-				this.model.get("_componentViews").push(view);
-				view.$el.on("click inview", this.onInteraction);
+			var parentArticleId = view.model.findAncestor('articles').get('_id');
+			var submitAllArticleId = this.model.get('_articleView').model.get('_id');
+			if (parentArticleId === submitAllArticleId) {
+				this.model.get('_componentViews').push(view);
+				if (view.model.get('_component') === 'textinput') {
+					view.$el.find('input').on('change.submitAll', this.onInteraction);
+					return;
+				}
+				view.$el.on('click.submitAll', this.onInteraction);
 			}
 		},
 
-		onInteraction: function(event) {
+		onInteraction: function() {
 			// need to wait until current call stack's done in FF
 			_.defer(this._onInteractionDelegate);
 		},
 
 		_onInteractionDelegate: function() {
-			var buttons = this.model.get("_articleView").$el.find(".buttons-action");
-			if (!!this.model.get("_isSubmitted")) return;
-			this.enableButtons(this.canSubmit());
+			if (!!this.model.get('_isSubmitted')) return;
+
+			this.enableSubmitAllButton(this.canSubmit());
 		},
 
-		onSubmitClicked: function() {
-			var buttons = this.model.get("_articleView").$el.find(".buttons-action");
+		onSubmitAllButtonClicked: function() {
+			this.model.get('_componentViews').forEach(function(view) {
+				$('.buttons-action', view.$el).trigger('click');
+			});
 
-			if(buttons.hasClass("disabled")) return;
+			this.enableSubmitAllButton(false);
 
-			_.each(this.model.get("_componentViews"), function(view) {
-				view.$el.off("click inview", this.onInteraction);
-				$(".buttons-action", view.$el).trigger("click");
-			}, this);
+			this.model.set('_isSubmitted', true);
 
-			this.enableButtons(false);
-
-			this.model.set("_isSubmitted", true);
-
-			Adapt.trigger("submitAll:submitted", this.model.get("_componentViews"));
+			Adapt.trigger('submitAll:submitted', this.model.get('_componentViews'));
 		}
 	});
 
-	Adapt.on("articleView:postRender", function(view) {
-		var saData = view.model.get("_submitAll");
-		if(saData && saData._isEnabled === true) {
+	Adapt.on('articleView:postRender', function(view) {
+		var saData = view.model.get('_submitAll');
+		if(saData && saData._isEnabled) {
 			var model = new Backbone.Model(saData);
 			model.set({
-				"_articleView": view,
-				"_componentViews": []
+				_articleView: view,
+				_componentViews: []
 			});
 			new SubmitAll({ model: model });
 		}

@@ -28,6 +28,7 @@
                 "_isEnabled": {
                   "type": "boolean",
                   "required": true,
+                  "default": false,
                   "title": "Enabled?",
                   "inputType": "Checkbox",
                   "validators": []
@@ -38,7 +39,7 @@
                   "title": "Insert Submit after block",
                   "inputType": "Text",
                   "validators": [],
-                  "help": "If you want the submit button to be appended to a specific block, insert its ID here. Leave blank for it to default to the last block in the article."
+                  "help": "If you want the submit button to be appended to a specific block within this article, insert its ID here. Leave blank to default to the last block in the article."
                 }
               }
             }
