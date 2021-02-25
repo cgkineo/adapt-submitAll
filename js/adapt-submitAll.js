@@ -117,7 +117,7 @@ define([
     },
 
     _onInteractionDelegate: function() {
-      if (!!this.model.get('_isSubmitted')) return;
+      if (!this.model.get('_isSubmitted')) return;
 
       this.enableSubmitAllButton(this.canSubmit());
     },
@@ -135,7 +135,7 @@ define([
 
   Adapt.on('articleView:postRender', view => {
     var saData = view.model.get('_submitAll');
-    if(saData && saData._isEnabled) {
+    if (saData && saData._isEnabled) {
       var model = new Backbone.Model(saData);
       model.set({
         _articleView: view,
