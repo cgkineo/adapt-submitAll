@@ -134,8 +134,8 @@ define([
     const saData = view.model.get('_submitAll');
     if (!saData || !saData._isEnabled) return;
 
-    const model = new Backbone.Model(saData);
-    model.set({
+    const model = new Backbone.Model({
+      ...saData,
       _isSubmitted: false,
       _articleView: view,
       _componentViews: []
