@@ -1,20 +1,21 @@
 {
-    "name": "adapt-submitAll",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/cgkineo/adapt-submitAll.git"
-    },
-    "framework": ">=2",
-    "homepage": "https://github.com/cgkineo/adapt-submitAll",
-    "version": "2.1.0",
-    "displayName": "Submit All",
-    "extension": "submitAll",
-    "description": "Extension to allow multiple questions to be submitted via a single submit button",
-    "main": "/js/adapt-submitAll.js",
-    "keywords": [
-        "adapt-plugin",
-        "adapt-extension"
-    ],
-    "license": "GPL-3.0",
-    "targetAttribute": "_submitAll"
+  "name": "adapt-submitAll",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cgkineo/adapt-submitAll.git"
+  },
+  "version": "3.0.0",
+  "framework": ">=5.3",
+  "homepage": "https://github.com/cgkineo/adapt-submitAll",
+  "issues": "https://github.com/cgkineo/adapt-submitAll/issues/new",
+  "extension": "submitAll",
+  "displayName": "Submit All",
+  "description": "Extension to allow multiple questions to be submitted via a single submit button",
+  "main": "/js/adapt-submitAll.js",
+  "keywords": [
+    "adapt-plugin",
+    "adapt-extension"
+  ],
+  "license": "GPL-3.0",
+  "targetAttribute": "_submitAll"
 }

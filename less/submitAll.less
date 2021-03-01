@@ -1,24 +1,16 @@
-.noSubmitButtons {
-	.buttons {
-		display:none;
-	}
+.no-submit-buttons {
+  .btn__container {
+    display: none;
+  }
 }
 
-.submitAll {
-	.buttons {
-		display: block;
+.submit-all {
+  .btn__container {
+    display: block;
+  }
 
-		.buttons-cluster {
-			text-align: center;
-		}
-
-		.buttons-action {
-			float:none;
-
-			& .disabled {
-				
-			}
-		}
-	}
-
+  .btn__action {
+    width: @device-width-large;
+    margin: 0 auto;
+  }
 }
