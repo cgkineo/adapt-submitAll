@@ -52,7 +52,7 @@ define([
         if ($div.length > 0) return $div;
       }
 
-      return $article.find('.block').last();
+      return $article;
     },
 
     enableSubmitAllButton: function(enable) {
