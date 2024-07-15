@@ -5,20 +5,20 @@ export default function SubmitAll (props) {
   const {
     buttonText,
     ariaLabel,
-    onSubmitAllButtonClicked,
+    onSubmitAllButtonClicked
   } = props;
 
   return (
-    <div className={"btn__container"}>
-      <div className={"btn__response-container"}>
-        <button 
+    <div className={'btn__container'}>
+      <div className={'btn__response-container'}>
+        <button
           className={classes([
             'btn-text',
             'btn__action',
             'js-btn-action',
             'is-disabled'
           ])}
-          aria-label={ariaLabel} 
+          aria-label={ariaLabel}
           aria-disabled="true"
           onClick={onSubmitAllButtonClicked}
         >
