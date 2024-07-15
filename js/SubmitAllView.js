@@ -38,12 +38,6 @@ export default class SubmitAllView extends Backbone.View {
     return this;
   }
 
-  /**
-    * Returns a reference to the `<div>` we're going to append our view to.
-    * @param {jQuery} $article JQuery reference to the article we're attached to
-    * @param {string} [blockId] The id of the block to append our view to. Must be in the article we're attached to...
-    * @return {jQuery}
-    */
   appendToContainerDiv() {
     const $article = this.articleView.$el;
     const $lastBlock = $article.find('.block').last();
