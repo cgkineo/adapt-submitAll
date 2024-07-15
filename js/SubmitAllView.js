@@ -9,44 +9,32 @@ export default class SubmitAllView extends Backbone.View {
     return 'submit-all';
   }
 
-  initialize() {
-    this.onSubmitAllButtonClicked = this.onSubmitAllButtonClicked.bind(this);
-
-    this.model.get('_articleView').$el.addClass('no-submit-buttons');
-
+  initialize({ articleView }) {
+    _.bindAll(this, 'onInteraction', 'onSubmitAllButtonClicked', 'postRender');
     this.listenTo(Adapt, {
-        'componentView:postRender': this.onComponentViewRendered,
-        remove: () => {
-            this.removeEventListeners();
-            this.remove();
-        }
+      'componentView:postRender': this.onComponentViewRendered,
+      remove: this.onRemove
     });
-
-    _.bindAll(this, 'onInteraction', '_onInteractionDelegate');
-
+    this.articleView = articleView;
+    this.componentViews = [];
     this.render();
   }
 
   render() {
-    const submitButtonLabels = Adapt.course.get('_buttons')._submit;
-
+    this.articleView.$el.addClass('no-submit-buttons');
+    const {
+      buttonText,
+      ariaLabel
+    } = Adapt.course.get('_buttons')._submit;
     const data = {
       ...this,
       model: this.model.toJSON(),
-      buttonText: submitButtonLabels.buttonText,
-      ariaLabel: submitButtonLabels.ariaLabel
+      buttonText,
+      ariaLabel
     };
-
     ReactDOM.render(<templates.submitAll {...data} />, this.el);
-
-    _.defer(() => {
-      Adapt.trigger('view:render', this);
-      this.listenTo(Adapt, 'drawer:closed', this.remove);
-    });
-
-    const $containerDiv = this.getContainerDiv(this.model.get('_articleView').$el, this.model.get('_insertAfterBlock'));
-    $containerDiv.after(this.$el);
-
+    _.defer(this.postRender);
+    this.appendToContainerDiv();
     return this;
   }
 
@@ -56,48 +44,20 @@ export default class SubmitAllView extends Backbone.View {
     * @param {string} [blockId] The id of the block to append our view to. Must be in the article we're attached to...
     * @return {jQuery}
     */
-  getContainerDiv($article, blockId) {
-    if (blockId) {
-      const $div = $article.find('.' + blockId);
-
-      if ($div.length > 0) return $div;
-    }
-
-    return $article.find('.block').last();
+  appendToContainerDiv() {
+    const $article = this.articleView.$el;
+    const $lastBlock = $article.find('.block').last();
+    const specifiedBlockId = this.model.get('_insertAfterBlock');
+    const $specifiedBlock = specifiedBlockId && $article.find('.' + specifiedBlockId);
+    const $containerDiv = $specifiedBlock.length
+      ? $specifiedBlock
+      : $lastBlock;
+    $containerDiv.after(this.$el);
   }
 
-  enableSubmitAllButton(enable) {
-    const $submitAllButton = this.$el.find('.js-btn-action');
-
-    if (enable) {
-      $submitAllButton.removeClass('is-disabled').attr('aria-disabled', false);
-
-      return;
-    }
-
-    $submitAllButton.addClass('is-disabled').attr('aria-disabled', true);
-  }
-
-  /**
-    * Checks all the questions in the article to see if they're all ready to be submitted or not
-    * @return {boolean}
-    */
-  canSubmit() {
-    const allAnswered = this.model.get('_componentViews').every(component => component.model.get('_isEnabled') && component.model.canSubmit());
-    
-    return allAnswered;
-  }
-
-  removeEventListeners() {
-    this.model.get('_componentViews').forEach(view => {
-      if (view.model.get('_component') === 'textinput') {
-        view.$el.find('input').off('change.submitAll');
-
-        return;
-      }
-
-      view.$el.off('click.submitAll');
-    });
+  postRender() {
+    Adapt.trigger('view:render', this);
+    this.listenTo(Adapt, 'drawer:closed', this.remove);
   }
 
   /**
@@ -109,40 +69,62 @@ export default class SubmitAllView extends Backbone.View {
     */
   onComponentViewRendered(view) {
     if (!view.$el.hasClass('is-question')) return;
-
-    const parentArticleId = view.model.findAncestor('article').get('_id');
-    const submitAllArticleId = this.model.get('_articleView').model.get('_id');
-    if (parentArticleId !== submitAllArticleId) return;
-
-    this.model.get('_componentViews').push(view);
-
+    const isInArticle = (view.model.findAncestor('article').get('_id') !== this.articleView.model.get('_id'));
+    if (isInArticle) return;
+    this.componentViews.push(view);
     if (view.model.get('_component') === 'textinput') {
       view.$el.find('input').on('change.submitAll', this.onInteraction);
-
       return;
     }
-
     view.$el.on('click.submitAll', this.onInteraction);
   }
 
   onInteraction() {
     // need to wait until current call stack's done in FF
-    _.defer(this._onInteractionDelegate);
+    _.defer(() => {
+      if (this.model.get('_isSubmitted')) return;
+      this.enableSubmitAllButton(this.canSubmit());
+    });
   }
 
-  _onInteractionDelegate() {
-    if (this.model.get('_isSubmitted')) return;
+  enableSubmitAllButton(enable) {
+    const $submitAllButton = this.$el.find('.js-btn-action');
+    $submitAllButton
+      .toggleClass('is-disabled', !enable)
+      .attr('aria-disabled', !enable);
+  }
 
-    this.enableSubmitAllButton(this.canSubmit());
+  /**
+    * Checks all the questions in the article to see if they're all ready to be submitted or not
+    * @return {boolean}
+    */
+  canSubmit() {
+    const areAllAnswered = this.componentViews.every(component =>
+      component.model.get('_isEnabled') &&
+      component.model.canSubmit()
+    );
+    return areAllAnswered;
   }
 
   onSubmitAllButtonClicked() {
-    this.model.get('_componentViews').forEach(view => view.$el.find('.js-btn-action').trigger('click'));
-
+    this.componentViews.forEach(view => view.$el.find('.js-btn-action').trigger('click'));
     this.enableSubmitAllButton(false);
-
     this.model.set('_isSubmitted', true);
+    Adapt.trigger('submitAll:submitted', this.componentViews);
+  }
 
-    Adapt.trigger('submitAll:submitted', this.model.get('_componentViews'));
+  onRemove() {
+    this.removeEventListeners();
+    this.remove();
+  }
+
+  removeEventListeners() {
+    this.componentViews.forEach(view => {
+      if (view.model.get('_component') === 'textinput') {
+        view.$el.find('input').off('change.submitAll');
+        return;
+      }
+      view.$el.off('click.submitAll');
+    });
   }
 }

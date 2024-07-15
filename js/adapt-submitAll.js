@@ -3,21 +3,17 @@ import SubmitAllView from './SubmitAllView';
 
 class SubmitAll extends Backbone.Controller {
   initialize() {
-    this.listenTo(Adapt, 'articleView:postRender', this.initSubmitAll);
+    this.listenTo(Adapt, 'articleView:postRender', this.onArticlePostRender);
   }
 
-  initSubmitAll(view) {
-    const saData = view.model.get('_submitAll');
-    if (!saData || !saData._isEnabled) return;
-
+  onArticlePostRender(view) {
+    const config = view.model.get('_submitAll');
+    if (!config?._isEnabled) return;
     const model = new Backbone.Model({
-      ...saData,
-      _isSubmitted: false,
-      _articleView: view,
-      _componentViews: []
+      ...config,
+      _isSubmitted: false
     });
-
-    new SubmitAllView({ model });
+    new SubmitAllView({ model, articleView: view });
   }
 }
 
