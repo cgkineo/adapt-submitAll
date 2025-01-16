@@ -49,7 +49,7 @@
                     "buttonText": {
                       "type": "string",
                       "title": "Button text",
-                      "default": "Save and Continue",
+                      "default": "Submit all",
                       "inputType": "Text",
                       "required": false,
                       "validators": [],
@@ -58,7 +58,7 @@
                     "ariaLabel": {
                       "type": "string",
                       "title": "ARIA label",
-                      "default": "Save and Continue",
+                      "default": "Submit all",
                       "inputType": "Text",
                       "required": false,
                       "validators": [],

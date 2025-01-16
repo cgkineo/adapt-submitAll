@@ -3,7 +3,7 @@
         "_isEnabled": true,
         "_insertAfterBlock": "",
         "_button": {
-            "buttonText": "Save and Continue",
-            "ariaLabel": "Save and Continue"
+            "buttonText": "Submit all",
+            "ariaLabel": "Submit all"
         }
     }

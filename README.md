@@ -26,11 +26,11 @@ If you want the submit button to be appended to a specific block within this art
 
 ##### **buttonText** (string)
 
-Sets the text that appears for the visual submit all button.
+Sets the text that appears for the visual submit all button. The default value is `Submit all`.
 
 ##### **ariaLabel** (string)
 
-Defines the text for the submit all button that is read out by screen readers.
+Defines the text for the submit all button that is read out by screen readers. The default value is `Submit all`.
 
 ### Notes
 
