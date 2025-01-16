@@ -25,7 +25,7 @@ export default class SubmitAllView extends Backbone.View {
     const {
       buttonText,
       ariaLabel
-    } = Adapt.course.get('_buttons')._submit;
+    } = this.model.get('_button');
     const data = {
       ...this,
       model: this.model.toJSON(),

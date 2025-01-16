@@ -10,17 +10,27 @@ The extension will hide the 'buttons' `<div>` for all the questions within the a
 
 The following attributes are set within *articles.json*.
 
-### **_submitAll** (object)
+### **\_submitAll** (object)
 
 The Submit All object. It contains the following settings:
 
-#### **_isEnabled** (boolean)
+#### **\_isEnabled** (boolean)
 
 Turns on and off the extension.
 
-#### **_insertAfterBlock** (string)
+#### **\_insertAfterBlock** (string)
 
 If you want the submit button to be appended to a specific block within this article, insert the block ID here. Leave blank to default to the last block in the article.
+
+#### **\_button** (object)
+
+##### **buttonText** (string)
+
+Sets the text that appears for the visual submit all button.
+
+##### **ariaLabel** (string)
+
+Defines the text for the submit all button that is read out by screen readers.
 
 ### Notes
 
