@@ -38,7 +38,7 @@ Defines the text for the submit all button that is read out by screen readers. T
 - Since the standard button group for each question gets hidden, the user will have no way of accessing the 'correct answer' functionality.
 
 ----------------------------
-**Author / maintainer:** CGKineo<br>
+**Author / maintainer:** Kineo<br>
 **AAT support:** No<br>
 **Accessibility support:** WAI AA<br>
 **RTL support:** Yes<br>
