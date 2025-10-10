@@ -24,7 +24,7 @@ export default class SubmitAllView extends Backbone.View {
     this.articleView.$el.addClass('no-submit-buttons');
     const buttons = this.model.get('_button');
     const courseSubmitButtons = Adapt.course.get('_buttons')._submit;
-    const buttonText = buttons.buttonText || courseSubmitButtons.buttonText;
+    const buttonText = buttons?.buttonText ?? courseSubmitButtons.buttonText;
     const ariaLabel = buttons.ariaLabel || courseSubmitButtons.ariaLabel;
     const data = {
       ...this,
