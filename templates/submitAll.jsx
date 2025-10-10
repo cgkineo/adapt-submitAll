@@ -1,5 +1,5 @@
 import React from 'react';
-import { classes } from 'core/js/reactHelpers';
+import { classes, compile } from 'core/js/reactHelpers';
 
 export default function SubmitAll (props) {
   const {
@@ -9,8 +9,9 @@ export default function SubmitAll (props) {
   } = props;
 
   return (
-    <div className={'btn__container'}>
-      <div className={'btn__response-container'}>
+    <div className='btn__container'>
+      <div className='btn__response-container'>
+
         <button
           className={classes([
             'btn-text',
@@ -19,11 +20,11 @@ export default function SubmitAll (props) {
             'is-disabled'
           ])}
           aria-label={ariaLabel}
-          aria-disabled="true"
+          aria-disabled='true'
           onClick={onSubmitAllButtonClicked}
-        >
-          {buttonText}
-        </button>
+          dangerouslySetInnerHTML={{ __html: compile(buttonText) }}
+        />
+
       </div>
     </div>
   );

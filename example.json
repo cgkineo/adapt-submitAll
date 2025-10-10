@@ -1,5 +1,9 @@
     // To go in articles.json
     "_submitAll": {
         "_isEnabled": true,
-        "_insertAfterBlock": ""
+        "_insertAfterBlock": "",
+        "_button": {
+            "buttonText": "Submit all",
+            "ariaLabel": "Submit all"
+        }
     }
