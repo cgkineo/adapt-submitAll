@@ -51,7 +51,6 @@ export default class SubmitAllView extends Backbone.View {
 
   postRender() {
     Adapt.trigger('view:render', this);
-    this.listenTo(Adapt, 'drawer:closed', this.remove);
   }
 
   /**
