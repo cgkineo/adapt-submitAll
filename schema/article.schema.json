@@ -1,0 +1,56 @@
+{
+  "$anchor": "submitAll-article",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "$patch": {
+    "source": {
+      "$ref": "article"
+    },
+    "with": {
+      "properties": {
+        "_submitAll": {
+          "type": "object",
+          "title": "Submit All",
+          "default": {},
+          "properties": {
+            "_isEnabled": {
+              "type": "boolean",
+              "title": "Enable Submit All",
+              "description": "Replaces the submit buttons of every question in this article with a single button that submits them all",
+              "default": false
+            },
+            "_insertAfterBlock": {
+              "type": "string",
+              "title": "Insert Submit after block",
+              "description": "If you want the submit button to be appended to a specific block within this article, insert its ID here. Leave blank to default to the last block in the article",
+              "default": ""
+            },
+            "_button": {
+              "type": "object",
+              "title": "Button",
+              "default": {},
+              "properties": {
+                "buttonText": {
+                  "type": "string",
+                  "title": "Button text",
+                  "default": "Submit all",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                },
+                "ariaLabel": {
+                  "type": "string",
+                  "title": "ARIA label",
+                  "default": "Submit all",
+                  "_adapt": {
+                    "translatable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
